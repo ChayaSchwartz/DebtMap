@@ -1,0 +1,63 @@
+.site-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap);
+  padding: 0.85rem 1.5rem;
+  border-block-end: 1px solid var(--border);
+  background: var(--bg-raised);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.brand:hover {
+  text-decoration: none;
+}
+
+.brand-mark {
+  inline-size: 0.85rem;
+  block-size: 1.6rem;
+  border-radius: 3px;
+  /* Three descending bars: the product's own ranking, in miniature. */
+  background:
+    linear-gradient(var(--band-critical) 0 33%, transparent 33% 100%) left / 100% 100% no-repeat,
+    linear-gradient(transparent 0 40%, var(--band-high) 40% 70%, transparent 70%) left / 100% 100%
+      no-repeat,
+    linear-gradient(transparent 0 78%, var(--band-low) 78% 100%) left / 100% 100% no-repeat;
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.brand-text small {
+  color: var(--text-muted);
+  font-size: 0.78rem;
+}
+
+.language-toggle {
+  padding: 0.4rem 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-inset);
+  color: var(--text);
+}
+
+.language-toggle:hover {
+  border-color: var(--accent);
+  color: var(--accent-strong);
+}
+
+.site-main {
+  max-inline-size: 1180px;
+  margin-inline: auto;
+  padding: 2rem 1.5rem 4rem;
+}

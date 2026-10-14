@@ -1,0 +1,36 @@
+<section class="hero">
+  <h1>{{ 'home.heading' | translate }}</h1>
+  <p class="subheading">{{ 'home.subheading' | translate }}</p>
+
+  <form class="repo-form" (ngSubmit)="submit()">
+    <input
+      type="url"
+      name="repoUrl"
+      class="repo-input ltr-text"
+      [placeholder]="'home.placeholder' | translate"
+      [ngModel]="repoUrl()"
+      (ngModelChange)="repoUrl.set($event)"
+      [disabled]="submitting()"
+      autocomplete="off"
+      spellcheck="false"
+    />
+    <button type="submit" class="submit" [disabled]="submitting() || !repoUrl().trim()">
+      {{ (submitting() ? 'home.analysing' : 'home.analyse') | translate }}
+    </button>
+  </form>
+
+  @if (errorMessage(); as message) {
+    <p class="error" role="alert">{{ message.key | translate: message.params }}</p>
+  }
+
+  <ul class="dimensions">
+    <li>
+      <span class="dot security" aria-hidden="true"></span>
+      {{ 'dimension.security' | translate }}
+    </li>
+    <li>
+      <span class="dot bugs" aria-hidden="true"></span>
+      {{ 'dimension.bugProneness' | translate }}
+    </li>
+  </ul>
+</section>

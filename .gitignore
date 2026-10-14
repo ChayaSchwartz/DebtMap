@@ -1,0 +1,23 @@
+node_modules/
+dist/
+build/
+.angular/
+coverage/
+*.tsbuildinfo
+
+.env
+.env.local
+.env.*.local
+
+# Working directory for cloned repositories under analysis.
+.debtmap-workspace/
+
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Playwright MCP verification artefacts
+.playwright-mcp/
+*.png

@@ -1,0 +1,87 @@
+<a class="back" [routerLink]="['/analysis', id()]">← {{ 'file.back' | translate }}</a>
+
+@if (errorMessage(); as message) {
+  <p class="error" role="alert">{{ message.key | translate: message.params }}</p>
+}
+
+@if (file(); as detail) {
+  <h1 class="ltr-text">{{ detail.path }}</h1>
+
+  <section class="metrics">
+    <h2>{{ 'file.metrics' | translate }}</h2>
+    <dl>
+      <div>
+        <dt>{{ 'table.bugProneness' | translate }}</dt>
+        <dd [class]="'band-' + band(detail.bugPronenessScore)">
+          {{ detail.bugPronenessScore.toFixed(0) }}
+        </dd>
+      </div>
+      <div>
+        <dt>{{ 'table.security' | translate }}</dt>
+        <dd [class]="'band-' + band(detail.securityScore)">
+          {{ detail.securityScore.toFixed(0) }}
+        </dd>
+      </div>
+      <div>
+        <dt>{{ 'table.churn' | translate }}</dt>
+        <dd>{{ detail.churnCommits }}</dd>
+      </div>
+      <div>
+        <dt>{{ 'table.bugs' | translate }}</dt>
+        <dd>{{ detail.bugCommits }}</dd>
+      </div>
+      <div>
+        <dt>{{ 'table.complexity' | translate }}</dt>
+        <dd>{{ detail.cyclomaticComplexity }}</dd>
+      </div>
+      <div>
+        <dt>{{ 'table.nesting' | translate }}</dt>
+        <dd>{{ detail.maxNestingDepth }}</dd>
+      </div>
+      <div>
+        <dt>{{ 'table.loc' | translate }}</dt>
+        <dd>{{ detail.loc }}</dd>
+      </div>
+    </dl>
+  </section>
+
+  <section class="findings">
+    <h2>{{ 'file.findings' | translate }}</h2>
+    @if (detail.securityFindings.length === 0) {
+      <p class="muted">{{ 'file.noFindings' | translate }}</p>
+    } @else {
+      <ul>
+        @for (finding of detail.securityFindings; track finding.ruleId + '-' + ($index)) {
+          <li>
+            <span class="severity" [class]="'band-' + severityBand(finding.severity)">
+              {{ 'severity.' + finding.severity | translate }}
+            </span>
+            <div class="finding-body">
+              <strong>{{ finding.title }}</strong>
+              <small class="ltr-text">
+                {{ finding.source }} · {{ finding.ruleId }}
+                @if (finding.line) {
+                  · {{ 'file.line' | translate: { line: finding.line } }}
+                }
+              </small>
+            </div>
+          </li>
+        }
+      </ul>
+    }
+  </section>
+
+  <section class="explanation">
+    <h2>{{ 'file.explanation' | translate }}</h2>
+    @if (summary(); as text) {
+      <p>{{ text }}</p>
+      <h3>{{ 'file.recommendation' | translate }}</h3>
+      <p>{{ recommendation() }}</p>
+      <small class="muted">
+        {{ 'file.generatedBy' | translate: { model: detail.explanation?.model } }}
+      </small>
+    } @else {
+      <p class="muted">{{ 'file.noExplanation' | translate }}</p>
+    }
+  </section>
+}

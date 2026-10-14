@@ -1,0 +1,79 @@
+/* Design tokens. Defined on bare :root so a single palette serves both
+   directions; RTL is handled by logical properties, not a second theme. */
+:root {
+  --bg: #0f1117;
+  --bg-raised: #171a23;
+  --bg-inset: #1e222d;
+  --border: #2a2f3d;
+  --text: #e6e9f0;
+  --text-muted: #98a0b3;
+  --accent: #5b8def;
+  --accent-strong: #7aa5ff;
+
+  --band-critical: #e5484d;
+  --band-high: #f2913d;
+  --band-moderate: #e3c04b;
+  --band-low: #4cc38a;
+
+  --radius: 10px;
+  --gap: 1rem;
+
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family:
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    'Helvetica Neue',
+    Arial,
+    sans-serif;
+  font-size: 16px;
+  line-height: 1.55;
+}
+
+/* Paths, commit hashes, and numeric measurements stay LTR and monospaced even
+   in Hebrew: a file path is an identifier, not prose, and mirroring it makes it
+   unreadable. */
+.ltr-text {
+  direction: ltr;
+  unicode-bidi: isolate;
+  font-family: ui-monospace, 'SF Mono', 'Cascadia Code', Consolas, monospace;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--accent-strong);
+  text-decoration: underline;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+}
+
+h1,
+h2,
+h3 {
+  line-height: 1.25;
+  margin: 0 0 0.5rem;
+}

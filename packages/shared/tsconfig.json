@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    // CommonJS so that both NestJS (CJS at runtime) and the Angular bundler
+    // can consume this package without interop shims. It holds types and
+    // frozen constants only, so there is nothing to gain from ESM here.
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "outDir": "./dist",
+    "rootDir": "./src"
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["src/**/*.test.ts"]
+}

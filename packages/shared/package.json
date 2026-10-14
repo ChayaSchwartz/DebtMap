@@ -1,0 +1,18 @@
+{
+  "name": "@debtmap/shared",
+  "version": "0.1.0",
+  "private": true,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "watch": "tsc -p tsconfig.json --watch",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.2",
+    "vitest": "^4.1.11"
+  }
+}

@@ -1,0 +1,230 @@
+@if (errorMessage(); as message) {
+  <p class="error" role="alert">{{ message.key | translate: message.params }}</p>
+}
+
+@if (run(); as analysis) {
+  <header class="results-header">
+    <div>
+      <h1 class="ltr-text">{{ analysis.repository.owner }}/{{ analysis.repository.name }}</h1>
+      @if (analysis.commitSha) {
+        <p class="meta">
+          {{ 'results.commit' | translate }}
+          <code class="ltr-text">{{ analysis.commitSha.slice(0, 10) }}</code>
+          @if (analysis.filesAnalyzed) {
+            · {{ 'results.filesAnalysed' | translate: { count: analysis.filesAnalyzed } }}
+          }
+        </p>
+      }
+    </div>
+
+    @if (!isRunning()) {
+      <div class="actions">
+        <button type="button" (click)="share()">
+          {{ (shareCopied() ? 'results.shareCopied' : 'results.share') | translate }}
+        </button>
+        <button type="button" (click)="reanalyse()">{{ 'results.reanalyse' | translate }}</button>
+      </div>
+    }
+  </header>
+
+  @if (isRunning()) {
+    <section class="progress-panel" role="status">
+      <p class="stage">{{ 'stage.' + (analysis.stage ?? 'queued') | translate }}</p>
+      <div class="progress-track">
+        <div class="progress-fill" [style.width.%]="analysis.progress"></div>
+      </div>
+      <p class="meta">{{ 'status.' + analysis.status | translate }} · {{ analysis.progress }}%</p>
+    </section>
+  } @else if (analysis.status === 'FAILED') {
+    <section class="failure" role="alert">
+      <h2>{{ 'status.FAILED' | translate }}</h2>
+      @let failure = runError(analysis);
+      <p>{{ failure.key | translate: failure.params }}</p>
+      @if (analysis.error) {
+        <p class="meta ltr-text">{{ analysis.error }}</p>
+      }
+    </section>
+  } @else {
+    <section class="scores">
+      <article class="score-card">
+        <h2>{{ 'dimension.security' | translate }}</h2>
+        <p class="score" [class]="'band-' + band(analysis.securityScore ?? 0)">
+          {{ (analysis.securityScore ?? 0).toFixed(0) }}
+        </p>
+        <p class="band">{{ 'band.' + band(analysis.securityScore ?? 0) | translate }}</p>
+      </article>
+
+      <article class="score-card">
+        <h2>{{ 'dimension.bugProneness' | translate }}</h2>
+        <p class="score" [class]="'band-' + band(analysis.bugPronenessScore ?? 0)">
+          {{ (analysis.bugPronenessScore ?? 0).toFixed(0) }}
+        </p>
+        <p class="band">{{ 'band.' + band(analysis.bugPronenessScore ?? 0) | translate }}</p>
+      </article>
+    </section>
+
+    @if (analysis.scanOutcomes.length) {
+      <section class="scan-status">
+        <h2>{{ 'scan.heading' | translate }}</h2>
+        <ul>
+          @for (outcome of analysis.scanOutcomes; track outcome.source) {
+            <li [class]="'scan-' + outcome.status">
+              <strong>{{ 'scan.' + outcome.source | translate }}</strong>
+              <span>{{ 'scan.' + outcome.status | translate }}</span>
+              @if (outcome.status !== 'ok') {
+                @if (scanReason(outcome); as reason) {
+                  <small>{{ reason.key | translate: reason.params }}</small>
+                } @else if (outcome.detail) {
+                  <small class="ltr-text">{{ outcome.detail }}</small>
+                } @else {
+                  <small>{{ 'scan.notRun' | translate }}</small>
+                }
+              } @else if (scanReason(outcome); as reason) {
+                <small>{{ reason.key | translate: reason.params }}</small>
+              }
+            </li>
+          }
+        </ul>
+      </section>
+    }
+
+    @if (repositoryFindings().length) {
+      <section class="repo-findings">
+        <h2>{{ 'repoFindings.heading' | translate }}</h2>
+        <p class="meta">{{ 'repoFindings.explanation' | translate }}</p>
+        <ul>
+          @for (finding of repositoryFindings(); track finding.ruleId + '|' + findingSource(finding)) {
+            <li>
+              <span class="pill" [class]="'band-' + severityBand(finding.severity)">
+                {{ 'severity.' + finding.severity | translate }}
+              </span>
+              <div class="finding-body">
+                <p class="finding-title">{{ finding.title }}</p>
+                <p class="meta ltr-text">
+                  {{ findingSource(finding) }}
+                  @if (finding.packageName) {
+                    @if (finding.fixedVersion) {
+                      · {{ 'repoFindings.fix' | translate: { version: finding.fixedVersion } }}
+                    } @else {
+                      · {{ 'repoFindings.noFix' | translate }}
+                    }
+                  }
+                </p>
+              </div>
+              @if (finding.referenceUrl) {
+                <a [href]="finding.referenceUrl" target="_blank" rel="noopener noreferrer">
+                  {{ 'repoFindings.reference' | translate }}
+                </a>
+              }
+            </li>
+          }
+        </ul>
+        @if (repositoryFindingsHidden() > 0) {
+          <p class="meta">
+            {{ 'repoFindings.hidden' | translate: { count: repositoryFindingsHidden() } }}
+          </p>
+        }
+      </section>
+    }
+
+    @if (sortedFiles().length === 0) {
+      <p class="empty">{{ 'results.noFiles' | translate }}</p>
+    } @else {
+      <section class="table-panel">
+        <div class="table-toolbar">
+          <h2>{{ 'results.heading' | translate }}</h2>
+          <div class="sorts">
+            <span class="sort-label">{{ 'table.sortBy' | translate }}</span>
+            <button
+              type="button"
+              [class.active]="sortKey() === 'bugPronenessScore'"
+              (click)="setSort('bugPronenessScore')"
+            >
+              {{ 'table.bugProneness' | translate }}
+            </button>
+            <button
+              type="button"
+              [class.active]="sortKey() === 'securityScore'"
+              (click)="setSort('securityScore')"
+            >
+              {{ 'table.security' | translate }}
+            </button>
+            <button
+              type="button"
+              [class.active]="sortKey() === 'churnCommits'"
+              (click)="setSort('churnCommits')"
+            >
+              {{ 'table.churn' | translate }}
+            </button>
+            <button
+              type="button"
+              [class.active]="sortKey() === 'cyclomaticComplexity'"
+              (click)="setSort('cyclomaticComplexity')"
+            >
+              {{ 'table.complexity' | translate }}
+            </button>
+          </div>
+        </div>
+
+        <div class="table-scroll">
+          <table cdk-table [dataSource]="sortedFiles()" class="risk-table">
+            <ng-container cdkColumnDef="path">
+              <th cdk-header-cell *cdkHeaderCellDef>{{ 'table.path' | translate }}</th>
+              <td cdk-cell *cdkCellDef="let file">
+                <a
+                  class="ltr-text file-link"
+                  [routerLink]="['/analysis', run()?.id, 'file', file.id]"
+                  >{{ file.path }}</a
+                >
+              </td>
+            </ng-container>
+
+            <ng-container cdkColumnDef="bugProneness">
+              <th cdk-header-cell *cdkHeaderCellDef>{{ 'table.bugProneness' | translate }}</th>
+              <td cdk-cell *cdkCellDef="let file">
+                <span class="pill" [class]="'band-' + band(file.bugPronenessScore)">
+                  {{ file.bugPronenessScore.toFixed(0) }}
+                </span>
+              </td>
+            </ng-container>
+
+            <!-- Security is tagged separately and never folded into the
+                 bug-proneness score: they are different problems. -->
+            <ng-container cdkColumnDef="security">
+              <th cdk-header-cell *cdkHeaderCellDef>{{ 'table.security' | translate }}</th>
+              <td cdk-cell *cdkCellDef="let file">
+                @if (file.securityFindings.length) {
+                  <span class="pill" [class]="'band-' + band(file.securityScore)">
+                    {{ file.securityFindings.length }}
+                  </span>
+                } @else {
+                  <span class="pill muted">—</span>
+                }
+              </td>
+            </ng-container>
+
+            <ng-container cdkColumnDef="churn">
+              <th cdk-header-cell *cdkHeaderCellDef>{{ 'table.churn' | translate }}</th>
+              <td cdk-cell *cdkCellDef="let file" class="numeric">{{ file.churnCommits }}</td>
+            </ng-container>
+
+            <ng-container cdkColumnDef="bugs">
+              <th cdk-header-cell *cdkHeaderCellDef>{{ 'table.bugs' | translate }}</th>
+              <td cdk-cell *cdkCellDef="let file" class="numeric">{{ file.bugCommits }}</td>
+            </ng-container>
+
+            <ng-container cdkColumnDef="complexity">
+              <th cdk-header-cell *cdkHeaderCellDef>{{ 'table.complexity' | translate }}</th>
+              <td cdk-cell *cdkCellDef="let file" class="numeric">
+                {{ file.cyclomaticComplexity }}
+              </td>
+            </ng-container>
+
+            <tr cdk-header-row *cdkHeaderRowDef="columns"></tr>
+            <tr cdk-row *cdkRowDef="let row; columns: columns"></tr>
+          </table>
+        </div>
+      </section>
+    }
+  }
+}

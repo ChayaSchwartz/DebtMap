@@ -1,0 +1,171 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Prisma 7 moved the connection URL out of the schema and into
+// prisma.config.ts; the client receives it through a driver adapter.
+datasource db {
+  provider = "postgresql"
+}
+
+enum RunStatus {
+  QUEUED
+  CLONING
+  ANALYZING
+  SCANNING
+  EXPLAINING
+  COMPLETED
+  FAILED
+}
+
+model Repository {
+  id            String   @id @default(cuid())
+  /// Canonical `github.com/owner/name`. The analysis history is keyed on this
+  /// rather than on a user account, since the MVP has no sign-in.
+  url           String   @unique
+  owner         String
+  name          String
+  defaultBranch String   @default("main")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  runs AnalysisRun[]
+
+  @@index([owner, name])
+  @@map("repositories")
+}
+
+model AnalysisRun {
+  id           String    @id @default(cuid())
+  repositoryId String
+  status       RunStatus @default(QUEUED)
+
+  /// Machine-readable stage key. The UI maps it to a translated string, so it
+  /// must never hold user-facing prose.
+  stage    String?
+  progress Int     @default(0)
+  /// Why the run failed, as a code the UI translates (`RunErrorCode` in
+  /// @debtmap/shared). `error` keeps the English technical detail.
+  errorCode String?
+  error     String?
+
+  commitSha     String?
+  filesAnalyzed Int?
+  /// Set when the repository exceeded MAX_FILES and only the largest were read.
+  filesDiscovered Int?
+  truncated       Boolean @default(false)
+
+  /// Repository-level aggregates on an absolute scale, so they stay comparable
+  /// between runs. Per-file scores are percentile ranks and cannot aggregate.
+  securityScore     Float?
+  bugPronenessScore Float?
+
+  /// Per-source scan results, including sources that failed or were skipped —
+  /// the UI must distinguish "found nothing" from "never ran".
+  scanOutcomes Json @default("[]")
+
+  /// Findings that belong to no analysed file: vulnerable dependencies, and
+  /// secrets on paths outside the analysed set, including files that exist
+  /// only in history. They feed the repository security score, so storing them
+  /// anywhere else would leave that score unexplainable.
+  repositoryFindings Json @default("[]")
+
+  /// Public, unguessable identifier for the share link.
+  shareSlug String @unique
+
+  startedAt  DateTime  @default(now())
+  finishedAt DateTime?
+
+  repository  Repository   @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
+  fileMetrics FileMetric[]
+
+  @@index([repositoryId, startedAt(sort: Desc)])
+  @@index([status])
+  @@map("analysis_runs")
+}
+
+model FileMetric {
+  id            String @id @default(cuid())
+  analysisRunId String
+  path          String
+  loc           Int    @default(0)
+
+  // Raw measurements, surfaced alongside the scores so a user can check our work.
+  churnCommits         Int @default(0)
+  churnLinesChanged    Int @default(0)
+  bugCommits           Int @default(0)
+  cyclomaticComplexity Int @default(0)
+  maxNestingDepth      Int @default(0)
+
+  // Percentile ranks within this repository, 0-100.
+  churnScore      Float @default(0)
+  bugScore        Float @default(0)
+  complexityScore Float @default(0)
+
+  /// The two dimensions are stored separately and never merged: a leaked
+  /// credential and a file that is merely hard to change are different
+  /// problems with different fixes.
+  bugPronenessScore Float @default(0)
+  securityScore     Float @default(0)
+  securityFindings  Json  @default("[]")
+
+  analysisRun AnalysisRun    @relation(fields: [analysisRunId], references: [id], onDelete: Cascade)
+  explanation AiExplanation?
+
+  @@unique([analysisRunId, path])
+  @@index([analysisRunId, bugPronenessScore(sort: Desc)])
+  @@index([analysisRunId, securityScore(sort: Desc)])
+  @@map("file_metrics")
+}
+
+model AiExplanation {
+  id           String @id @default(cuid())
+  fileMetricId String @unique
+
+  /// Hash of repo URL, path, file blob SHA, and score bucket. Because the blob
+  /// SHA is part of it, re-analysing an unchanged repository costs no model
+  /// requests at all — which matters against a 15-per-minute free-tier ceiling.
+  cacheKey String @unique
+
+  /// Both languages come from a single model call. Translating on demand would
+  /// spend a second request from the same budget, and generating only the
+  /// active language would break the share link for the other one.
+  summaryEn        String
+  summaryHe        String
+  recommendationEn String
+  recommendationHe String
+
+  primaryRiskFactor String
+  model             String
+  createdAt         DateTime @default(now())
+
+  fileMetric FileMetric @relation(fields: [fileMetricId], references: [id], onDelete: Cascade)
+
+  @@map("ai_explanations")
+}
+
+/// Advisory details keyed by OSV id.
+///
+/// Required because OSV's batch endpoint returns only ids and modification
+/// timestamps — severity and fixed versions need a follow-up request per
+/// vulnerability. Advisories are shared across repositories, so caching them
+/// turns dozens of network round-trips per run into almost none.
+model VulnerabilityCache {
+  id           String   @id @default(cuid())
+  osvId        String   @unique
+  severity     String
+  cvss         Float?
+  summary      String
+  referenceUrl String?
+
+  /// Package name to the versions that fix this advisory. One advisory can
+  /// affect several packages and is usually patched on more than one release
+  /// branch, so the recommended upgrade depends on which version is installed
+  /// — which means it cannot be reduced to a single column.
+  fixedVersions Json @default("{}")
+
+  fetchedAt DateTime @default(now())
+
+  @@index([fetchedAt])
+  @@map("vulnerability_cache")
+}

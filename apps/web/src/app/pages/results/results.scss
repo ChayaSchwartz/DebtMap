@@ -1,0 +1,358 @@
+.results-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--gap);
+  flex-wrap: wrap;
+  margin-block-end: 1.75rem;
+}
+
+h1 {
+  font-size: 1.5rem;
+}
+
+.meta {
+  color: var(--text-muted);
+  font-size: 0.88rem;
+  margin: 0;
+}
+
+.meta code {
+  background: var(--bg-inset);
+  padding: 0.1rem 0.35rem;
+  border-radius: 4px;
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.actions button {
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-inset);
+  color: var(--text);
+  font-size: 0.88rem;
+}
+
+.actions button:hover {
+  border-color: var(--accent);
+  color: var(--accent-strong);
+}
+
+.progress-panel {
+  padding: 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-raised);
+}
+
+.stage {
+  margin: 0 0 0.75rem;
+  font-weight: 600;
+}
+
+.progress-track {
+  block-size: 6px;
+  border-radius: 3px;
+  background: var(--bg-inset);
+  overflow: hidden;
+}
+
+.progress-fill {
+  block-size: 100%;
+  background: var(--accent);
+  transition: width 0.4s ease;
+}
+
+.failure {
+  padding: 1.25rem 1.5rem;
+  border: 1px solid var(--band-critical);
+  border-radius: var(--radius);
+  background: rgb(229 72 77 / 8%);
+}
+
+.failure h2 {
+  color: var(--band-critical);
+  font-size: 1.05rem;
+}
+
+.scores {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--gap);
+  margin-block-end: 1.75rem;
+}
+
+.score-card {
+  padding: 1.15rem 1.35rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-raised);
+}
+
+.score-card h2 {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.score {
+  margin: 0.2rem 0 0;
+  font-size: 2.4rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.band {
+  margin: 0.25rem 0 0;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.scan-status {
+  margin-block-end: 1.75rem;
+}
+
+.scan-status h2 {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.scan-status ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.4rem;
+}
+
+.scan-status li {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  padding: 0.5rem 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-raised);
+  font-size: 0.88rem;
+}
+
+.scan-status small {
+  color: var(--text-muted);
+  flex-basis: 100%;
+}
+
+.scan-status li.scan-failed {
+  border-color: var(--band-high);
+}
+
+.table-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap);
+  flex-wrap: wrap;
+  margin-block-end: 0.75rem;
+}
+
+.table-toolbar h2 {
+  font-size: 1.05rem;
+  margin: 0;
+}
+
+.sorts {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+
+.sort-label {
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  margin-inline-end: 0.2rem;
+}
+
+.sorts button {
+  padding: 0.3rem 0.7rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+}
+
+.sorts button.active {
+  border-color: var(--accent);
+  color: var(--accent-strong);
+  background: rgb(91 141 239 / 12%);
+}
+
+/* Wide content scrolls inside its own container so the page body never scrolls
+   horizontally. */
+.table-scroll {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.risk-table {
+  inline-size: 100%;
+  border-collapse: collapse;
+  background: var(--bg-raised);
+}
+
+.risk-table th,
+.risk-table td {
+  padding: 0.6rem 0.9rem;
+  text-align: start;
+  border-block-end: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+.risk-table th {
+  position: sticky;
+  inset-block-start: 0;
+  background: var(--bg-inset);
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.risk-table tr:last-child td {
+  border-block-end: none;
+}
+
+.risk-table tr:hover td {
+  background: rgb(91 141 239 / 6%);
+}
+
+.numeric {
+  font-variant-numeric: tabular-nums;
+  text-align: end;
+}
+
+.file-link {
+  font-size: 0.88rem;
+}
+
+.pill {
+  display: inline-block;
+  min-inline-size: 2.4rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  text-align: center;
+  font-size: 0.8rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: #0d1017;
+}
+
+.pill.muted {
+  background: var(--bg-inset);
+  color: var(--text-muted);
+}
+
+.band-critical {
+  color: var(--band-critical);
+}
+
+.band-high {
+  color: var(--band-high);
+}
+
+.band-moderate {
+  color: var(--band-moderate);
+}
+
+.band-low {
+  color: var(--band-low);
+}
+
+.pill.band-critical {
+  background: var(--band-critical);
+  color: #180608;
+}
+
+.pill.band-high {
+  background: var(--band-high);
+  color: #1a0e04;
+}
+
+.pill.band-moderate {
+  background: var(--band-moderate);
+  color: #191403;
+}
+
+.pill.band-low {
+  background: var(--band-low);
+  color: #04180f;
+}
+
+.error {
+  color: var(--band-critical);
+}
+
+.empty {
+  color: var(--text-muted);
+}
+
+/* Repository-level findings: dependencies and secrets that belong to no file
+   in the table above, and would otherwise leave the security score unexplained. */
+.repo-findings {
+  margin-block-end: 1.75rem;
+}
+
+.repo-findings h2 {
+  font-size: 1.05rem;
+  margin: 0 0 0.25rem;
+}
+
+.repo-findings > .meta {
+  margin-block-end: 0.75rem;
+}
+
+.repo-findings ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.4rem;
+}
+
+.repo-findings li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-raised);
+  font-size: 0.88rem;
+}
+
+.finding-body {
+  flex: 1;
+  min-inline-size: 0;
+}
+
+.finding-title {
+  margin: 0 0 0.15rem;
+  overflow-wrap: anywhere;
+}
+
+.repo-findings a {
+  color: var(--accent-strong);
+  font-size: 0.82rem;
+  white-space: nowrap;
+}

@@ -1,0 +1,30 @@
+{
+  "name": "debtmap",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Map the risk hiding in a codebase: security exposure and bug-proneness, ranked and explained.",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "infra:up": "docker compose up -d",
+    "infra:down": "docker compose down",
+    "infra:reset": "docker compose down -v && docker compose up -d",
+    "build": "npm run build -w @debtmap/shared && npm run build -w @debtmap/analyzer && npm run build -w @debtmap/api && npm run build -w @debtmap/web",
+    "dev:api": "npm run start:dev -w @debtmap/api",
+    "dev:web": "npm run start -w @debtmap/web",
+    "analyze": "npm run analyze -w @debtmap/analyzer --",
+    "test": "npm run test --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present",
+    "prisma:generate": "npm run prisma:generate -w @debtmap/api",
+    "prisma:migrate": "npm run prisma:migrate -w @debtmap/api",
+    "prisma:studio": "npm run prisma:studio -w @debtmap/api"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.2"
+  }
+}

@@ -1,0 +1,152 @@
+{
+  "app": {
+    "name": "DebtMap",
+    "tagline": "מצא את הסיכון שמסתתר בקוד שלך",
+    "language": "English"
+  },
+  "home": {
+    "heading": "אילו קבצים בריפו שלך באמת מסוכנים?",
+    "subheading": "הדבק ריפו ציבורי מ-GitHub. DebtMap מדרג את הקבצים לפי חשיפה אבטחתית ונטייה לבאגים, ומסביר למה.",
+    "placeholder": "https://github.com/owner/repository",
+    "analyse": "נתח",
+    "analysing": "מנתח…",
+    "invalidUrl": "הזן כתובת של ריפו ציבורי ב-GitHub, למשל https://github.com/owner/name",
+    "recent": "נותחו לאחרונה"
+  },
+  "status": {
+    "QUEUED": "בתור",
+    "CLONING": "משכפל את הריפו",
+    "ANALYZING": "מנתח את הקוד",
+    "SCANNING": "סורק פרצות אבטחה",
+    "EXPLAINING": "כותב הסברים",
+    "COMPLETED": "הושלם",
+    "FAILED": "נכשל"
+  },
+  "stage": {
+    "queued": "ממתין להתחלה",
+    "cloning": "מוריד את הריפו",
+    "discovering": "מאתר קבצי מקור",
+    "git-metrics": "קורא היסטוריית שינויים",
+    "ast-metrics": "מודד מורכבות",
+    "security": "מריץ סורקי אבטחה",
+    "scoring": "מחשב ציונים",
+    "completed": "הסתיים",
+    "failed": "נכשל"
+  },
+  "dimension": {
+    "security": "אבטחה",
+    "bugProneness": "נטייה לבאגים",
+    "securityShort": "אבטחה",
+    "bugPronenessShort": "באגים"
+  },
+  "band": {
+    "critical": "קריטי",
+    "high": "גבוה",
+    "moderate": "בינוני",
+    "low": "נמוך"
+  },
+  "results": {
+    "heading": "מפת הסיכון",
+    "filesAnalysed": "{{count}} קבצים נותחו",
+    "truncated": "מוצגים {{analysed}} הקבצים הגדולים מתוך {{discovered}} שנמצאו.",
+    "commit": "קומיט",
+    "reanalyse": "נתח מחדש",
+    "share": "העתק קישור שיתוף",
+    "shareCopied": "הקישור הועתק",
+    "history": "היסטוריה",
+    "noFiles": "לא נמצאו קבצי TypeScript או JavaScript בריפו הזה.",
+    "empty": "אין עדיין מה להציג."
+  },
+  "table": {
+    "path": "קובץ",
+    "bugProneness": "נטייה לבאגים",
+    "security": "אבטחה",
+    "churn": "שינויים",
+    "bugs": "תיקוני באגים",
+    "complexity": "מורכבות",
+    "nesting": "עומק קינון",
+    "loc": "שורות",
+    "sortBy": "מיין לפי"
+  },
+  "file": {
+    "heading": "פירוט הקובץ",
+    "metrics": "מדדים",
+    "findings": "ממצאי אבטחה",
+    "noFindings": "לא נמצאו ממצאי אבטחה בקובץ הזה.",
+    "explanation": "מה זה אומר",
+    "noExplanation": "לא נוצר הסבר עבור הקובץ הזה.",
+    "recommendation": "המלצה",
+    "back": "חזרה לתוצאות",
+    "generatedBy": "נוצר על ידי {{model}}",
+    "line": "שורה {{line}}"
+  },
+  "scan": {
+    "heading": "מצב הסורקים",
+    "ok": "הושלם",
+    "skipped": "דולג",
+    "failed": "נכשל",
+    "notRun": "הבדיקה הזו לא רצה, ולכן הממצאים שלה אינם ידועים — לא נעדרים.",
+    "semgrep": "דפוסי קוד (Semgrep)",
+    "gitleaks": "סודות בהיסטוריה (Gitleaks)",
+    "osv": "פרצות בתלויות (OSV)"
+  },
+  "repoFindings": {
+    "heading": "ממצאים ברמת המאגר",
+    "explanation": "הממצאים האלה שייכים למאגר ולא לקובץ מסוים: תלויות פגיעות, וסודות שנשמרו בנתיבים מחוץ לקבוצת הקבצים שנותחה — כולל קבצים שנמחקו אך נותרו בהיסטוריה.",
+    "fix": "תוקן בגרסה {{version}}",
+    "noFix": "לא פורסם תיקון",
+    "reference": "התראה",
+    "hidden": "{{count}} ממצאים נוספים אינם מוצגים."
+  },
+  "trend": {
+    "heading": "מגמה",
+    "improving": "משתפר",
+    "worsening": "מחמיר",
+    "unchanged": "ללא שינוי",
+    "needsTwoRuns": "הרץ את הניתוח שוב כדי לראות מגמה.",
+    "sinceLastRun": "מאז ההרצה הקודמת"
+  },
+  "error": {
+    "generic": "משהו השתבש. נסה שוב.",
+    "retry": "נסה שוב"
+  },
+  "severity": {
+    "critical": "קריטי",
+    "high": "גבוה",
+    "medium": "בינוני",
+    "low": "נמוך",
+    "info": "מידע"
+  },
+  "apiError": {
+    "invalidUrl": "הזן כתובת של ריפו ציבורי ב-GitHub, למשל https://github.com/owner/name",
+    "repoNotFound": "הריפו {{repo}} לא נמצא. הוא צריך להיות קיים וציבורי.",
+    "repoPrivate": "ריפואים פרטיים עדיין לא נתמכים.",
+    "repoTooLarge": "הריפו {{repo}} שוקל {{sizeMb}}MB, יותר מהמגבלה של {{limitMb}}MB.",
+    "githubRateLimit": "הגענו למגבלת הבקשות של GitHub. נסה שוב בעוד זמן מה.",
+    "dailyLimit": "הגענו למגבלה היומית של {{limit}} ניתוחים. נסה שוב מחר.",
+    "analysisNotFound": "הניתוח הזה לא נמצא.",
+    "fileNotFound": "הקובץ הזה לא חלק מהניתוח."
+  },
+  "runError": {
+    "noSourceFiles": "לא נמצאו בריפו קבצי TypeScript או JavaScript.",
+    "cloneFailed": "לא הצלחנו להוריד את הריפו.",
+    "cancelled": "הניתוח בוטל.",
+    "interrupted": "הניתוח נקטע בגלל הפעלה מחדש של השרת. הרץ אותו שוב.",
+    "abandoned": "הניתוח הפסיק להגיב והופסק. הרץ אותו שוב.",
+    "queueFailed": "לא הצלחנו להתחיל את הניתוח. נסה שוב.",
+    "unknown": "הניתוח נכשל בגלל שגיאה לא צפויה."
+  },
+  "scanReason": {
+    "notInstalled": "{{tool}} לא מותקן בשרת.",
+    "notEnabled": "הסורק הזה כבוי בשרת הזה.",
+    "timeout": "נעצר אחרי {{seconds}} שניות בלי לסיים.",
+    "cancelled": "בוטל.",
+    "outputTooLarge": "הפיק יותר מ-{{megabytes}}MB של פלט ונעצר.",
+    "badOutput": "הסורק רץ, אבל לא הצלחנו לקרוא את התוצאות שלו.",
+    "noLockfile": "אין בריפו הזה קובץ package-lock.json.",
+    "noResolvedPackages": "בקובץ ה-lock לא רשומות חבילות מותקנות.",
+    "httpError": "לא הצלחנו להגיע לשירות הפרצות (HTTP {{status}}).",
+    "partialLookups": "לא הצלחנו לקבל פרטים על {{count}} פרצות.",
+    "unexpected": "הסורק נכשל באופן לא צפוי."
+  }
+}

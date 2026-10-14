@@ -1,0 +1,17 @@
+<header class="site-header">
+  <a class="brand" routerLink="/">
+    <span class="brand-mark" aria-hidden="true"></span>
+    <span class="brand-text">
+      <strong>{{ 'app.name' | translate }}</strong>
+      <small>{{ 'app.tagline' | translate }}</small>
+    </span>
+  </a>
+
+  <button type="button" class="language-toggle" (click)="languages.toggle()">
+    {{ 'app.language' | translate }}
+  </button>
+</header>
+
+<main class="site-main">
+  <router-outlet />
+</main>
